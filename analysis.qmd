@@ -7,7 +7,7 @@ editor: visual
 ```{r}
 library(palmerpenguins)
 library(tidyverse)
-
+library(HistData)
 ```
 
 ```{r}
@@ -21,5 +21,39 @@ penguins |> group_by(island)|>
 ```{r}
 penguins |>
   ggplot(aes(x = flipper_length_mm, y = body_mass_g)) + geom_point()
+```
+
+```{r}
+data("Breslau")
+```
+
+```{r}
+
+# Sum each column
+column_totals <- colSums(Breslau |> select(-age))
+
+# View the result
+column_totals
+
+
+```
+```{r}
+breslau_long <- Breslau|>
+  pivot_longer(
+    cols = starts_with("year"),
+    names_to = "year",
+    values_to = "deaths"
+  ) |>
+  filter(age >= 5)  # Filter as requested
+
+ggplot(breslau_long, aes(x = age, y = deaths)) +
+  geom_point() +
+  facet_wrap(~ year, ncol = 2) +
+  labs(
+    title = "Deaths by Age (Age ≥ 5) in Breslau by Year",
+    x = "Age at Death",
+    y = "Number of Deaths"
+  ) +
+  theme_minimal()
 ```
 
